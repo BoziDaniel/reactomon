@@ -5,13 +5,12 @@ export class Pokemons extends Component {
   render() {
     return this.props.pokemons.map(pokemon => (
       <React.Fragment>
-        <div>
-          <Pokemon pokemon = {pokemon}/>
-        </div>
+        <li>
+          <Pokemon getId = {this.props.getId} getData ={this.props.getPokemonData} pokemon={pokemon} />
+        </li>
       </React.Fragment>
     ));
   }
 }
 
 export default Pokemons;
-//name={pokemon.name} url={pokemon.url} key={pokemon.url}
