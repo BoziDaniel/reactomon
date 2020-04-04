@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import Pokemon from "./Pokemon";
 
 const Pokemons = (props) => {
-  return this.props.pokemons.map((pokemon) => (
+  return props.pokemons.map((pokemon) => (
     <React.Fragment>
       <li>
         <Pokemon
-          getId={this.props.getId}
-          getData={this.props.getPokemonData}
+          getId={props.getId}
+          getData={props.getPokemonData}
           pokemon={pokemon}
         />
       </li>
