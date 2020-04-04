@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 const Pokemon = (props) => {
-  //  getData= (url)=>axios.get(url).then(res=>this.setState({pokemonData: res.data}))
 
   const { name, url } = props.pokemon;
   const id = url.substring(url.lastIndexOf("/") - 1)[0];
