@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import "./App.css";
 import NavBar from "./components/layout/NavBar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -6,63 +6,62 @@ import Pokemons from "./components/Pokemons";
 import axios from "axios";
 import Types from "./components/pages/Types";
 import PokemonDetail from "./components/pages/PokemonDetail";
+import useHttp from "./hooks/http";
 
-class App extends Component {
-  state = {
-    pokemons: [],
-    types: [],
-    pokemonData: []
-  };
+const App = (props) => {
+  const [pokemons, setPokemons] = useState([]);
+  const [types, setTypes] = useState([]);
 
-  getPokemonData = (url)=>axios.get(url).then(resp=>{return resp.data})
-  getId= url => url.substring(url.lastIndexOf('/') -1)[0];
-  
-  componentDidMount() {
-    axios.get("https://pokeapi.co/api/v2/pokemon").then(res => {
-      this.setState({ pokemons: res.data.results });
-      axios.get("https://pokeapi.co/api/v2/type").then(res => {
-        this.setState({ types: res.data.results });
-      });
+  setPokemons(useHttp("https://pokeapi.co/api/v2/pokemon", []));
+
+  setTypes(useHttp("https://pokeapi.co/api/v2/type"), []);
+
+  const getPokemonData = (url) =>
+    axios.get(url).then((resp) => {
+      return resp.data;
     });
-    const pokemons = this.state.pokemons;
-    pokemons.map(pokemon =>
-      axios.get(pokemon.url).then(res => (pokemon.details = res))
-    );
-  }
 
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <div className="container">
-            <NavBar />
-            <Route
-              exact
-              path="/pokemons"
-              render={props => (
-                <React.Fragment>
-                  <ul>
-                    <Pokemons getId = {this.getId} getPokemonData={this.getPokemonData} pokemons={this.state.pokemons} />
-                  </ul>
-                </React.Fragment>
-              )}
-            />
-            <Route
-              exact
-              path="/types"
-              render={props => (
-                <React.Fragment>
-                  <Types types={this.state.types} />
-                </React.Fragment>
-              )}
-            />
-            <Route exact path="/pokemon/:id" component={PokemonDetail} />
-            
-            
-          </div>
+  const getId = (url) => url.substring(url.lastIndexOf("/") - 1)[0];
+
+  setPokemons(
+    pokemons.map((pokemon) =>
+      axios.get(pokemon.url).then((res) => (pokemon.details = res))
+    )
+  );
+  return (
+    <Router>
+      <div className="App">
+        <div className="container">
+          <NavBar />
+          <Route
+            exact
+            path="/pokemons"
+            render={(props) => (
+              <React.Fragment>
+                <ul>
+                  <Pokemons
+                    getId={this.getId}
+                    getPokemonData={this.getPokemonData}
+                    pokemons={this.state.pokemons}
+                  />
+                </ul>
+              </React.Fragment>
+            )}
+          />
+          <Route
+            exact
+            path="/types"
+            render={(props) => (
+              <React.Fragment>
+                <Types types={types} />
+              </React.Fragment>
+            )}
+          />
+          <Route exact path="/pokemon/:id" component={PokemonDetail} />
         </div>
-      </Router>
-    );
-  }
-}
+      </div>
+    </Router>
+  );
+};
+
 export default App;
